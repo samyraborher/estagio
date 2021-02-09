@@ -1,0 +1,54 @@
+from urllib.request import urlopen, Request
+from bs4 import BeautifulSoup
+
+target = 'https://www.direitapolitica.com'
+req = Request(url=target)
+html = urlopen(req).read()
+soup = BeautifulSoup(html, 'html.parser')
+links = soup.find_all('a')
+
+stopList = [
+    '#',
+    '#page',
+    'pt-br',
+    'itunes',
+    'boostingads',
+    'statcounter',
+    'conta',
+    'servedby',
+    'anuncie',
+    'feeds',
+    'whatsapp',
+    'xyzscripts',
+    'facebook',
+    'admin',
+    'app',
+    'magonedemo',
+    'wpbloggertemplates',
+    'twitter',
+    'linkedin',
+    'pinterest',
+    'youtube',
+    'instagram',
+    'support',
+    'blogger',
+    'plus',
+    'tumblr',
+    'wordpress',
+    'BRASIL',
+    'parler'
+]
+
+def domainReturn(link):
+    try:
+        domain = link.split('/')[2]
+        if ((domain.split('.')[0] == 'www') or (domain.split('.')[0] == 'www2') or (domain.split('.')[0] == 'www1')  or (domain.split('.')[0] == 'www12')) :
+            return domain.split('.')[1]  
+        return domain.split('.')[0]
+    except:
+        return '#'
+
+for link in links:
+    dominio = domainReturn(link['href'])
+    if dominio not in stopList:
+        print(dominio,";",link['href'])
