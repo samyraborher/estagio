@@ -1,0 +1,28 @@
+from urllib.request import urlopen, Request
+from bs4 import BeautifulSoup
+import nltk
+
+nltk.download('stopwords')
+stopList = nltk.corpus.stopwords.words('portuguese')
+
+target = 'https://www.direitapolitica.com'
+req = Request(url=target)
+html = urlopen(req).read()
+soup = BeautifulSoup(html, 'html.parser')
+texto = soup.get_text()
+texto = texto.rstrip('\n')
+
+listaT = []
+listaTermos = []
+listaPalavras = texto.split(' ')
+
+for palavra in listaPalavras:
+    if palavra not in stopList:
+        listaT.append(palavra)
+
+for termo in listaT:
+    for y in ['\n', '\t', '/', '.', '-', '(', ')', '|', '»', '©']:
+        termo = termo.replace(y, "")
+    listaTermos.append(termo)
+
+print(listaTermos)
